@@ -2,12 +2,13 @@ import { CommandClient, CommandContext } from "../../deps.ts";
 import SynthesisClient from "../client.ts";
 import Config from "../types/Config.ts";
 
-export const trueEquals = (a: any, b: any): boolean => (!a && !b) || (a === b);
+export const trueEquals = (a: unknown, b: unknown): boolean =>
+  (!a && !b) || (a === b);
 
 export const requireSynthesisConfigFromClient = (
   client: CommandClient,
 ): Config => {
-  return requireSynthesisClient(client).config
+  return requireSynthesisClient(client).config;
 };
 
 export const requireSynthesisConfig = (ctx: CommandContext): Config =>

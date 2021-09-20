@@ -22,14 +22,13 @@ export default class SyncCommand extends Command {
   async execute(ctx: CommandContext) {
     const start = Date.now();
     const client = requireSynthesisClient(ctx.client);
-    const config = client.config;
 
     if (!ctx.guild) {
       return;
     }
 
     const replyMessage = await ctx.message.reply(
-      `Synchronizing issues with **${config.github.repo}**.`,
+      `Synchronizing issues with **${client.githubConfig.repo}**.`,
     );
 
     const information = await this.resync(client, ctx.guild);
@@ -53,9 +52,11 @@ export default class SyncCommand extends Command {
     guild: Guild,
   ): Promise<SyncResult> {
     const github = client.github;
-    const config = client.config;
 
-    const issuesChannel = await this.generateIssuesChannel(config, guild);
+    const issuesChannel = await this.generateIssuesChannel(
+      client.config,
+      guild,
+    );
 
     const issues = (await github.getIssues()).sort((i1, i2) =>
       i1.number - i2.number
@@ -68,7 +69,11 @@ export default class SyncCommand extends Command {
         formatIssue({
           ...issue,
           id: issue.number,
-          url: formatUrl(config.github.user, config.github.repo, issue.number),
+          url: formatUrl(
+            client.githubConfig.user,
+            client.githubConfig.repo,
+            issue.number,
+          ),
         }),
       );
 
@@ -88,8 +93,8 @@ export default class SyncCommand extends Command {
           formatIssueComment({
             ...comment,
             url: formatUrl(
-              config.github.user,
-              config.github.repo,
+              client.githubConfig.user,
+              client.githubConfig.repo,
               issue.number,
               comment.id,
             ),

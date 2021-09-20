@@ -1,5 +1,5 @@
 import { Octokit } from "../../deps.ts";
-import Config from "../types/Config.ts";
+import { GithubConfiguration } from "../types/Config.ts";
 import Issue from "../types/Issue.ts";
 import IssueComment from "../types/IssueComment.ts";
 
@@ -7,18 +7,18 @@ export default class GithubIntegration {
   private octokit: Octokit;
 
   // TODO: Add interface for Github config.
-  private readonly githubConfig: Config;
+  private readonly githubConfig: GithubConfiguration;
 
-  constructor(config: Config) {
-    this.octokit = new Octokit({ auth: config.github.token });
+  constructor(config: GithubConfiguration) {
+    this.octokit = new Octokit({ auth: config.token });
 
     this.githubConfig = config;
   }
 
   async getIssues(): Promise<Issue[]> {
     return (await this.octokit.request("GET /repos/{owner}/{repo}/issues", {
-      owner: this.githubConfig.github.user,
-      repo: this.githubConfig.github.repo,
+      owner: this.githubConfig.user,
+      repo: this.githubConfig.repo,
     })).data as Issue[];
   }
 
@@ -28,8 +28,8 @@ export default class GithubIntegration {
     return (await this.octokit.request(
       "GET /repos/{owner}/{repo}/issues/{issue_number}/comments",
       {
-        owner: this.githubConfig.github.user,
-        repo: this.githubConfig.github.repo,
+        owner: this.githubConfig.user,
+        repo: this.githubConfig.repo,
         issue_number: id,
       },
     )).data as IssueComment[];

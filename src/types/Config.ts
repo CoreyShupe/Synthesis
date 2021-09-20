@@ -1,19 +1,23 @@
-export default interface Config {
-  discord: {
-    secret: string;
-    channels: {
-      logs: string;
-      issues: {
-        parent?: string;
-        name: string;
-      };
+export interface GithubConfiguration {
+  token: string;
+  user: string;
+  repo: string;
+}
+
+export interface DiscordConfiguration {
+  secret: string;
+  channels: {
+    logs: string;
+    issues: {
+      parent?: string;
+      name: string;
     };
   };
-  github: {
-    token: string;
-    user: string;
-    repo: string;
-  };
+}
+
+export default interface Config {
+  discord: DiscordConfiguration;
+  github: GithubConfiguration;
 }
 
 export const config: Config = JSON.parse(
