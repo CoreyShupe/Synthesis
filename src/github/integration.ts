@@ -15,14 +15,14 @@ export default class GithubIntegration {
     this.githubConfig = config;
   }
 
-  async getIssues(): Promise<Issue[]> {
+  public async getIssues(): Promise<Issue[]> {
     return (await this.octokit.request("GET /repos/{owner}/{repo}/issues", {
       owner: this.githubConfig.user,
       repo: this.githubConfig.repo,
     })).data as Issue[];
   }
 
-  async getIssueComments(
+  public async getIssueComments(
     id: number,
   ): Promise<IssueComment[]> {
     return (await this.octokit.request(
